@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Echo Test</h1>
+  <input type="text" name="" id="sendTxt">
+  <button id="sendBtn">发送</button>
+
+  <script src="socket.io.min.js"></script>
+  <script>
+    var socket = io('ws://localhost:3004/');//建立连接
+    var showMessage = function (str, type) {
+      var _div = document.createElement('div');
+      _div.innerHTML = str;
+      if (type == 'enter') {
+        _div.style.color = 'blue';
+      } else if (type == 'leave') {
+        _div.style.color = 'red';
+      }
+      document.body.appendChild(_div);
+    }
+    
+    document.getElementById('sendBtn').onclick = function () {
+      var txt = document.getElementById('sendTxt').value;
+      if (txt) {
+        socket.emit('message' ,txt);
+      }
+    };
+
+    socket.on('enter', function (data) {
+      showMessage(data, 'enter');
+    })
+
+    socket.on('message', function (data) {
+      showMessage(data, 'message');
+    })
+
+    socket.on('leave', function (data) {
+      showMessage(data, 'leave');
+    })
+  </script>
+</body>
+</html>

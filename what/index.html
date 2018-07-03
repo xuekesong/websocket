@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Echo Test</h1>
+  <input type="text" name="" id="sendTxt">
+  <button id="sendBtn">发送</button>
+
+  <script>
+    var webSocket = new WebSocket('ws://localhost:5000/');//建立连接
+    var showMessage = function (str) {
+      var _div = document.createElement('div');
+      _div.innerHTML = str;
+      document.body.appendChild(_div);
+    }
+    webSocket.onopen = function () {//开始
+      console.log('websocket.open');
+      document.getElementById('sendBtn').onclick = function () {
+        var txt = document.getElementById('sendTxt').value;
+        if (txt) {
+          webSocket.send(txt);
+        }
+      };
+    }
+    webSocket.onclose = function () {//结束
+      console.log('websocket close');
+    }
+    webSocket.onmessage = function (e) {//接收到消息之后触发，接收到的信息为e.data
+      console.log(e.data);
+      showMessage(e.data);
+    }
+  </script>
+</body>
+</html>
